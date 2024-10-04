@@ -1,0 +1,17 @@
+.welcome-text {
+    margin: 30px;
+}
+
+.image-prompt {
+    text-align: center;
+}
+
+.image {
+    width:auto;
+    height:auto;
+}
+
+.image-size {
+    width: 200px;
+    height: 200px;
+}
