@@ -8,6 +8,7 @@ import { apiCall } from '../Router/Api';
 function Home() {
     const [promptText, setPromptText] = useState("Babies on horse");
     const [imageUrl, setImageUrl] = useState("https://mytestbucket96.s3.ap-south-1.amazonaws.com/generate/I4aYXpgxQi_generate_image.jpg");
+    const [loading, setLoading] = useState(false);
     const notify = (message) => toast(message);
     
     const [state, setState] = useState({ Auth: null }); // Start with null
@@ -36,6 +37,7 @@ function Home() {
             if (!state.Auth) {
                 throw new Error("Authentication token is not available.");
             }
+            setLoading(true);
             const data = await apiCall('image/generate', 'POST', { prompt: promptText }, {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${state.Auth}`
@@ -48,6 +50,8 @@ function Home() {
             } else {
                 notify(error.message);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -60,7 +64,9 @@ function Home() {
                     <p>Please enter the prompt for image generation</p>
                     <input type="text" value={promptText} onChange={(e) => setPromptText(e.target.value)} required />
                 </label>
-                <button type="button" className="submit" onClick={handleGenerateImage}>Generate Image</button>
+                <button type="button" className="submit" onClick={handleGenerateImage} disabled={loading}>
+                    {loading ? "Generating..." : "Generate Image"}
+                </button>
                 <div className="image"><img className="image-size" src={imageUrl} alt="Generated" /></div>
             </div>
         </div>
